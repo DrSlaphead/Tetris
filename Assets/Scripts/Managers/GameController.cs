@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
   Shape m_activeShape;
 
   public float m_dropInterval = 0.1f;
-
+  private float m_dropIntervalModded;
   float m_timeToDrop;
 
   float m_timeToNextKeyLeftRight;
@@ -105,6 +105,7 @@ public class GameController : MonoBehaviour
     {
       m_pausePanel.SetActive ( false );
     }
+    m_dropIntervalModded = m_dropInterval;
   }
 
   // Update is called once per frame
@@ -124,7 +125,7 @@ public class GameController : MonoBehaviour
     // example of NOT using the Input Manager
     //if (Input.GetKey ("right") && (Time.time > m_timeToNextKey) || Input.GetKeyDown (KeyCode.RightArrow)) 
 
-    if ( Input.GetButton ( "MoveRight" ) && ( Time.time > m_timeToNextKeyLeftRight ) || Input.GetButtonDown ( "MoveRight" ) )
+    if (( Input.GetButton ( "MoveRight" ) && ( Time.time > m_timeToNextKeyLeftRight )) || Input.GetButtonDown ( "MoveRight" ) )
     {
       m_activeShape.MoveRight ();
       m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
@@ -141,7 +142,7 @@ public class GameController : MonoBehaviour
       }
 
     }
-    else if ( Input.GetButton ( "MoveLeft" ) && ( Time.time > m_timeToNextKeyLeftRight ) || Input.GetButtonDown ( "MoveLeft" ) )
+    else if (( Input.GetButton ( "MoveLeft" ) && ( Time.time > m_timeToNextKeyLeftRight )) || Input.GetButtonDown ( "MoveLeft" ) )
     {
       m_activeShape.MoveLeft ();
       m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
@@ -180,9 +181,9 @@ public class GameController : MonoBehaviour
 
     }
 
-    else if ( Input.GetButton ( "MoveDown" ) && ( Time.time > m_timeToNextKeyDown ) || ( Time.time > m_timeToDrop ) )
+    else if (( Input.GetButton ( "MoveDown" ) && ( Time.time > m_timeToNextKeyDown )) || ( Time.time > m_timeToDrop ) )
     {
-      m_timeToDrop = Time.time + m_dropInterval;
+      m_timeToDrop = Time.time + m_dropIntervalModded;
       m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
 
       m_activeShape.MoveDown ();
@@ -234,11 +235,18 @@ public class GameController : MonoBehaviour
     if ( m_gameBoard.m_completedRows > 0 )
     {
       m_scoreManager.ScoreLines ( m_gameBoard.m_completedRows );
-
-      if ( m_gameBoard.m_completedRows > 1 )
+      if ( m_scoreManager.m_didLevelUp )
       {
-        AudioClip randomVocal = m_soundManager.GetRandomClip ( m_soundManager.m_vocalClips );
-        PlaySound ( randomVocal );
+        PlaySound ( m_soundManager.m_levelUpVocalClip );
+        m_dropIntervalModded =Mathf.Clamp( m_dropInterval - ( ( ( float ) m_scoreManager.m_level - 1 ) * 0.05f ),0.05f,1f);
+      }
+      else
+      {
+        if ( m_gameBoard.m_completedRows > 1 )
+        {
+          AudioClip randomVocal = m_soundManager.GetRandomClip ( m_soundManager.m_vocalClips );
+          PlaySound ( randomVocal );
+        }
       }
       PlaySound ( m_soundManager.m_clearRowSound );
     }

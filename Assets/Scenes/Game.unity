@@ -186,6 +186,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e753dc3dea92f4b1c81255878103653f, type: 3}
   - {fileID: 8300000, guid: 8b9eee15a25ac4457bc8de1db8deed46, type: 3}
   m_gameOverVocalClip: {fileID: 8300000, guid: dde698f7e18ad439d93644afcb0de99b, type: 3}
+  m_levelUpVocalClip: {fileID: 8300000, guid: 2c74626c1fb694ae6babfb9e4b3cf48e, type: 3}
   m_musicIconToggle: {fileID: 817462910}
   m_fxIconToggle: {fileID: 980008272}
 --- !u!1 &85704273
@@ -4424,7 +4425,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -5640,7 +5641,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 504f5d0023dfaf54abee6a58978cf243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_linesPerLevel: 5
+  m_linesPerLevel: 3
+  m_linesText: {fileID: 683919992}
+  m_levelText: {fileID: 2093113918}
+  m_scoreText: {fileID: 1471667498}
+  m_didLevelUp: 0
 --- !u!1 &2093113916
 GameObject:
   m_ObjectHideFlags: 0
