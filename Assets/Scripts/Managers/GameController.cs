@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class GameController : MonoBehaviour
 
   // currently active shape
   Shape m_activeShape;
+  // ghost for visualization
+  Ghost m_ghost;
 
   public float m_dropInterval = 0.1f;
   private float m_dropIntervalModded;
@@ -63,7 +66,7 @@ public class GameController : MonoBehaviour
     m_spawner = GameObject.FindObjectOfType<Spawner> ();
     m_soundManager = GameObject.FindObjectOfType<SoundManager> ();
     m_scoreManager = GameObject.FindObjectOfType<ScoreManager> ();
-
+    m_ghost = GameObject.FindObjectOfType<Ghost> ();
 
     m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
     m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
@@ -109,7 +112,7 @@ public class GameController : MonoBehaviour
   }
 
   // Update is called once per frame
-  void Update()
+  private void Update()
   {
     // if we are missing a spawner or game board or active shape, then we don't do anything
     if ( !m_spawner || !m_gameBoard || !m_activeShape || m_gameOver || !m_soundManager || !m_scoreManager )
@@ -118,6 +121,14 @@ public class GameController : MonoBehaviour
     }
 
     PlayerInput ();
+  }
+
+  private void LateUpdate()
+  {
+    if(m_ghost)
+    {
+      m_ghost.DrawGhost ( m_activeShape , m_gameBoard );
+    }
   }
 
   void PlayerInput()
@@ -217,6 +228,10 @@ public class GameController : MonoBehaviour
     // move the shape up, store it in the Board's grid array
     m_activeShape.MoveUp ();
     m_gameBoard.StoreShapeInGrid ( m_activeShape );
+    if(m_ghost)
+    {
+      m_ghost.Reset ();                                                                       // kill the last ghost object  
+    }
 
     // spawn a new shape
     m_activeShape = m_spawner.SpawnShape ();
@@ -279,7 +294,8 @@ public class GameController : MonoBehaviour
   public void Restart()
   {
     Time.timeScale = 1f;
-    Application.LoadLevel ( Application.loadedLevel );
+    SceneManager.LoadScene ( SceneManager.GetActiveScene().name );
+//    Application.LoadLevel ( Application.loadedLevel );
   }
 
   // plays a sound with an option volume multiplier

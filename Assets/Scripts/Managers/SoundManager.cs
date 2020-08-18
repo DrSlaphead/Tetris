@@ -98,11 +98,6 @@ public class SoundManager : MonoBehaviour {
 		}
 	}
 
-	void Update()
-	{
-
-	}
-
 	public void ToggleMusic()
 	{
 		m_musicEnabled = !m_musicEnabled;
